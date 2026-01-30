@@ -1,11 +1,11 @@
 # Ethio Date Picker
 
-A custom Ethiopian date picker Flutter package that supports Amharic, Oromo, and English languages. It uses the `abushakir` package for Ethiopian date calculations and `flutter_bloc` for state management.
+A custom Ethiopian date picker Flutter package that supports Amharic, English languages. It uses the `abushakir` package for Ethiopian date calculations and `flutter_bloc` for state management.
 
 
 ## Screenshots
 
-| Light Mode | Dark Mode |
+| Amharic | English |
 |:---:|:---:|
 | <img src="example/images/photo_6046102364428635414_y.jpg" width="250" /> | <img src="example/images/photo_6046102364428635413_y.jpg" width="250" /> |
 
