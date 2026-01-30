@@ -7,7 +7,7 @@ A custom Ethiopian date picker Flutter package that supports Amharic, English la
 
 | Amharic | English |
 |:---:|:---:|
-| <img src="example/images/photo_6046538453933034778_y.jpg" width="250" /> | <img src="example/images/photo_6046102364428635414_y.jpg" width="250" /> |
+| <img src="example/images/photo_6046538453933034778_y.jpg" width="250" /> | <img src="example/images/photo_6046401813843480140_y.jpg" width="250" /> |
 
 ## Features
 
