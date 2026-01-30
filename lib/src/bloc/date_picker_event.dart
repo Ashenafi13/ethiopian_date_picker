@@ -1,6 +1,7 @@
 import 'package:abushakir/abushakir.dart';
 import 'package:equatable/equatable.dart';
 
+/// Base class for all date picker events.
 abstract class DatePickerEvent extends Equatable {
   const DatePickerEvent();
 }
@@ -53,22 +54,30 @@ class CurrentDayCalendar extends DatePickerEvent {
   List<Object> get props => [currentMonth];
 }
 
+/// Event to navigate to the next month.
 class NextMonthCalendar extends DatePickerEvent {
+  /// The current month being displayed.
   final ETC currentMonth;
   const NextMonthCalendar(this.currentMonth);
   @override
   List<Object> get props => [currentMonth.nextMonth];
 }
 
+/// Event to navigate to the previous month.
 class PrevMonthCalendar extends DatePickerEvent {
+  /// The current month being displayed.
   final ETC currentMonth;
   const PrevMonthCalendar(this.currentMonth);
   @override
   List<Object> get props => [currentMonth.prevMonth];
 }
 
+/// Event to navigate to a specific year.
 class CalenderByYear extends DatePickerEvent {
+  /// The target year.
   final int year;
+
+  /// The current month.
   final ETC currentMonth;
   const CalenderByYear(this.currentMonth, this.year);
   @override
@@ -121,9 +130,15 @@ class GetSelectedIndex extends DatePickerEvent {
   List<Object?> get props => [selectedIndex, startYear, endYear, selectedYear];
 }
 
+/// Event to add a single date selection.
 class AddSingleValues extends DatePickerEvent {
+  /// Formatted date string.
   final String singleDate;
+
+  /// Current context moment.
   final ETC currentMoment;
+
+  /// Numeric representation for comparison.
   final int dateForComparision;
   const AddSingleValues(
     this.singleDate,
@@ -134,9 +149,15 @@ class AddSingleValues extends DatePickerEvent {
   List<Object?> get props => [singleDate, currentMoment, dateForComparision];
 }
 
+/// Event to remove a single date selection.
 class RemoveItemFromList extends DatePickerEvent {
+  /// Formatted date string.
   final String singleDate;
+
+  /// Current context moment.
   final ETC currentMoment;
+
+  /// Numeric representation for comparison.
   final int dateForComparision;
   const RemoveItemFromList(
     this.singleDate,

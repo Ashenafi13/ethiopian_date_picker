@@ -5,24 +5,41 @@ import 'bloc/date_picker_bloc.dart';
 import 'bloc/date_picker_event.dart';
 import 'bloc/date_picker_state.dart';
 import 'constants/date_picker_strings.dart';
+import 'utils/date_picker_utils.dart';
 
+/// A customizable Ethiopian Date Picker widget that supports both Ethiopian and Gregorian calendars.
+///
+/// This widget provides a modern UI for selecting dates in the Ethiopian calendar
+/// (Abushakir) and handles conversion/display as needed.
 class EthiopianDatePicker extends StatefulWidget {
+  /// Whether to display the Gregorian calendar equivalent.
   final bool displayGregorianCalender;
+
+  /// The language for the picker (e.g., 'am' for Amharic, 'en' for English).
   final String userLanguage;
+
+  /// The background color for today's date in the grid.
   final Color todaysDateBackgroundColor;
+
+  /// The start year for the year selection dropdown.
   final int startYear;
+
+  /// The end year for the year selection dropdown.
   final int endYear;
+
+  /// Whether to allow selection of dates in the past.
   final bool allowPastDates;
 
+  /// Creates an [EthiopianDatePicker].
   const EthiopianDatePicker({
-    Key? key,
+    super.key,
     required this.displayGregorianCalender,
     required this.userLanguage,
     required this.startYear,
     required this.endYear,
     required this.todaysDateBackgroundColor,
     this.allowPastDates = false,
-  }) : super(key: key);
+  });
 
   @override
   _EthiopianDatePickerState createState() => _EthiopianDatePickerState();
@@ -61,12 +78,12 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
+                  color: Colors.black.withValues(alpha: 0.15),
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                 ),
                 BoxShadow(
-                  color: _primaryColor.withOpacity(0.1),
+                  color: _primaryColor.withValues(alpha: 0.1),
                   blurRadius: 60,
                   offset: const Offset(0, 30),
                 ),
@@ -109,19 +126,28 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
                 child: Column(
                   children: [
                     Text(
-                      state.currentMoment.monthName ?? '',
+                      returnDayAndMonthName(
+                            '',
+                            '',
+                            state.currentMoment.monthName ?? '',
+                            widget.userLanguage,
+                            state.currentMoment.year.toString(),
+                            true,
+                          ) ??
+                          '',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                         letterSpacing: 0.5,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${state.currentMoment.year}',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -146,7 +172,7 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
 
   Widget _buildNavButton(IconData icon, VoidCallback onPressed) {
     return Material(
-      color: Colors.white.withOpacity(0.1),
+      color: Colors.white.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(14),
       child: InkWell(
         onTap: onPressed,
@@ -163,7 +189,7 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButton<int>(
@@ -354,7 +380,11 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOutCubic,
-        transform: Matrix4.identity()..scale(isTapped ? 0.9 : 1.0),
+        transform: Matrix4.diagonal3Values(
+          isTapped ? 0.9 : 1.0,
+          isTapped ? 0.9 : 1.0,
+          1.0,
+        ),
         transformAlignment: Alignment.center,
         decoration: BoxDecoration(
           color: isSelected
@@ -372,14 +402,14 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
               ? [
                   BoxShadow(
                     color: (isSelected ? _selectedColor : _todayColor)
-                        .withOpacity(0.4),
+                        .withValues(alpha: 0.4),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -392,7 +422,7 @@ class _EthiopianDatePickerState extends State<EthiopianDatePicker>
               color: isSelected || (isToday && !isDisabled)
                   ? Colors.white
                   : isDisabled
-                  ? _textSecondary.withOpacity(0.5)
+                  ? _textSecondary.withValues(alpha: 0.5)
                   : _textPrimary,
               fontSize: 16,
               fontWeight: isSelected || isToday

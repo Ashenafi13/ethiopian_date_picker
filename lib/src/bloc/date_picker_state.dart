@@ -1,111 +1,150 @@
 import 'package:abushakir/abushakir.dart';
 import 'package:equatable/equatable.dart';
 
+/// Base class for all date picker states.
 abstract class DatePickerState extends Equatable {
+  /// The current moment being displayed in the calendar.
   final ETC currentMoment;
   const DatePickerState(this.currentMoment);
 }
 
+/// The initial state of the date picker.
 class DatePickerInitial extends DatePickerState {
   const DatePickerInitial(super.currentMoment);
   @override
   List<Object> get props => [currentMoment];
 }
 
+/// State emitted when the first value (start date) is selected.
 class SelectedFirstValueState extends DatePickerState {
+  /// The numeric value of the selected day.
   final int firstNumber;
-  const SelectedFirstValueState(ETC moment, this.firstNumber) : super(moment);
+  const SelectedFirstValueState(super.currentMoment, this.firstNumber);
   @override
   List<Object> get props => [firstNumber];
 }
 
+/// State emitted when the second value (end date) is selected.
 class SelectedSecondValueState extends DatePickerState {
+  /// The numeric value of the selected day.
   final int secondValue;
-  const SelectedSecondValueState(ETC moment, this.secondValue) : super(moment);
+  const SelectedSecondValueState(super.currentMoment, this.secondValue);
   @override
   List<Object> get props => [secondValue];
 }
 
+/// State emitted when a selection is removed.
 class RemoveFirstValueState extends DatePickerState {
+  /// The numeric value of the day being removed.
   final int firstNumber;
-  const RemoveFirstValueState(ETC moment, this.firstNumber) : super(moment);
+  const RemoveFirstValueState(super.currentMoment, this.firstNumber);
   @override
   List<Object> get props => [firstNumber];
 }
 
+/// State emitted when a month is changed.
 class MonthsState extends DatePickerState {
+  /// The new current month.
   final ETC currentMonth;
   const MonthsState(this.currentMonth) : super(currentMonth);
   @override
   List<Object> get props => [currentMonth];
 }
 
+/// State emitted when setting the day name.
 class SetDayNameState extends DatePickerState {
+  /// The name of the day.
   final String dayName;
-  const SetDayNameState(ETC moment, this.dayName) : super(moment);
+  const SetDayNameState(super.currentMoment, this.dayName);
   @override
   List<Object?> get props => [dayName];
 }
 
+/// State emitted when the list of years is retrieved.
 class GetYearsListState extends DatePickerState {
+  /// The list of available years.
   final List yearsList;
-  const GetYearsListState(ETC moment, this.yearsList) : super(moment);
+  const GetYearsListState(super.currentMoment, this.yearsList);
   @override
   List<Object?> get props => [yearsList];
 }
 
+/// State emitted when a year is selected.
 class SetSelectedIndexState extends DatePickerState {
+  /// The list of years.
   final List yearsList;
+
+  /// The index of the selected year.
   final int selectedIndex;
+
+  /// The selected year.
   final int selectedYear;
   const SetSelectedIndexState(
     this.selectedYear,
-    ETC moment,
+    super.currentMoment,
     this.selectedIndex,
     this.yearsList,
-  ) : super(moment);
+  );
   @override
   List<Object?> get props => [yearsList, selectedIndex, selectedYear];
 }
 
+/// State emitted for single value selection.
 class SingleValuesIndexState extends DatePickerState {
+  /// The selected date string.
   final String singleDatesList;
+
+  /// The date value for comparison.
   final int dateForComparsion;
   const SingleValuesIndexState(
-    ETC moment,
+    super.currentMoment,
     this.singleDatesList,
     this.dateForComparsion,
-  ) : super(moment);
+  );
   @override
   List<Object?> get props => [singleDatesList, dateForComparsion];
 }
 
+/// State emitted when a value is removed from the selection list.
 class RemoveValueFromListState extends DatePickerState {
+  /// The date string being removed.
   final String singleDatesList;
+
+  /// The date value for comparison.
   final int dateForcomparsion;
   const RemoveValueFromListState(
-    ETC currentMoment,
+    super.currentMoment,
     this.singleDatesList,
     this.dateForcomparsion,
-  ) : super(currentMoment);
+  );
   @override
   List<Object?> get props => [singleDatesList, dateForcomparsion];
 }
 
+/// State emitted when the first date of a range is added.
 class AddFirstValueState extends DatePickerState {
+  /// Selected day.
   final int day;
+
+  /// Selected month.
   final int month;
+
+  /// Selected year.
   final int year;
+
+  /// Formatted date string.
   final String firstDate;
+
+  /// Numeric representation for comparison.
   final int firstDateForComparision;
   const AddFirstValueState(
     this.day,
     this.month,
     this.year,
-    ETC moment2,
+    super.currentMoment,
     this.firstDate,
     this.firstDateForComparision,
-  ) : super(moment2);
+  );
   @override
   List<Object?> get props => [
     day,
@@ -116,23 +155,37 @@ class AddFirstValueState extends DatePickerState {
   ];
 }
 
+/// State emitted when a long tap first value is removed.
 class RemoveLongTapFirstValueState extends DatePickerState {
+  /// Formatted date string.
   final String firstDate;
+
+  /// Numeric representation for comparison.
   final int firstDateForComparision;
   const RemoveLongTapFirstValueState(
-    ETC moment2,
+    super.currentMoment,
     this.firstDate,
     this.firstDateForComparision,
-  ) : super(moment2);
+  );
   @override
   List<Object?> get props => [firstDate, firstDateForComparision];
 }
 
+/// State emitted when the second date of a range is added.
 class AddSecondValueState extends DatePickerState {
+  /// Selected day.
   final int day;
+
+  /// Selected month.
   final int month;
+
+  /// Selected year.
   final int year;
+
+  /// Formatted date string.
   final String secondDate;
+
+  /// Numeric representation for comparison.
   final int firstDateForComparision;
   const AddSecondValueState(
     this.day,
@@ -140,8 +193,8 @@ class AddSecondValueState extends DatePickerState {
     this.year,
     this.secondDate,
     this.firstDateForComparision,
-    ETC moment2,
-  ) : super(moment2);
+    super.currentMoment,
+  );
   @override
   List<Object?> get props => [
     day,
@@ -152,26 +205,34 @@ class AddSecondValueState extends DatePickerState {
   ];
 }
 
+/// State emitted when a long tap second value is removed.
 class RemoveLongTapSecondValueState extends DatePickerState {
+  /// Formatted date string.
   final String secondDate;
+
+  /// Numeric representation for comparison.
   final int secondDateForComparision;
   const RemoveLongTapSecondValueState(
-    ETC moment2,
+    super.currentMoment,
     this.secondDate,
     this.secondDateForComparision,
-  ) : super(moment2);
+  );
   @override
   List<Object?> get props => [secondDate, secondDateForComparision];
 }
 
+/// State emitted when a long tap second value is removed after both are added.
 class RemoveLongTapSecondValueAfterState extends DatePickerState {
+  /// Formatted date string.
   final String secondDate;
+
+  /// Numeric representation for comparison.
   final int secondDateForComparision;
   const RemoveLongTapSecondValueAfterState(
-    ETC moment2,
+    super.currentMoment,
     this.secondDate,
     this.secondDateForComparision,
-  ) : super(moment2);
+  );
   @override
   List<Object?> get props => [secondDate, secondDateForComparision];
 }

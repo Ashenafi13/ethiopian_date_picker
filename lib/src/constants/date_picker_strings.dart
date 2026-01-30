@@ -1,3 +1,4 @@
+/// Ethiopian calendar (Amharic) localized strings for the date picker.
 class EthiopianDatePickerStrings {
   static const String shortMonday = 'ሰ';
   static const String shortTuesday = 'ማ';
@@ -35,6 +36,7 @@ class EthiopianDatePickerStrings {
   static const String pag = 'ጷጉሜን';
 }
 
+/// English (Latin) localized strings for the date picker.
 class EnglishDatePickerStrings {
   static const String shortMonday = 'M';
   static const String shortTuesday = 'T';
@@ -57,21 +59,22 @@ class EnglishDatePickerStrings {
   static const String okay = 'Ok';
   static const String cancel = 'Cancel';
 
-  static const String jan = 'January';
-  static const String feb = 'February';
-  static const String mar = 'March';
-  static const String apr = 'April';
-  static const String may = 'May';
-  static const String jun = 'June';
-  static const String jul = 'July';
-  static const String aug = 'August';
-  static const String sep = 'September';
-  static const String oct = 'October';
-  static const String nov = 'November';
-  static const String dec = 'December';
-  static const String pag = 'September';
+  static const String jan = 'Tir';
+  static const String feb = 'Yekatit';
+  static const String mar = 'Megabit';
+  static const String apr = 'Miazia';
+  static const String may = 'Ginbot';
+  static const String jun = 'Sene';
+  static const String jul = 'Hamle';
+  static const String aug = 'Nehase';
+  static const String sep = 'Meskerem';
+  static const String oct = 'Tikimt';
+  static const String nov = 'Hidar';
+  static const String dec = 'Tahsas';
+  static const String pag = 'Pagumē';
 }
 
+/// Afan Oromo localized strings for the date picker.
 class OromoDatePickerStrings {
   static const String shortMonday = 'Daf';
   static const String shortTuesday = 'Kib';
