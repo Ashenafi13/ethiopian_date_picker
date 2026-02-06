@@ -76,8 +76,10 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
   static const Color _cardColor = Color(0xFFFFFFFF);
   static const Color _selectedColor = Color(0xFF00C896);
   static const Color _todayColor = Color(0xFFFF6B6B);
-  static const Color _morningColor = Color(0xFFFFB347);
-  static const Color _eveningColor = Color(0xFF7B68EE);
+  static const Color _morningColor = Color(0xFFFFB347); // Orange - ጠዋት
+  static const Color _afternoonColor = Color(0xFF4CAF50); // Green - ከሰአት
+  static const Color _eveningColor = Color(0xFF7B68EE); // Purple - ማታ
+  static const Color _nightColor = Color(0xFF3F51B5); // Indigo - ሌሊት
   static const Color _textPrimary = Color(0xFF1A1A2E);
   static const Color _textSecondary = Color(0xFF6B7280);
   static const Color _textLight = Color(0xFFFFFFFF);
@@ -369,9 +371,7 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
   Widget _buildTimeDisplay(TimePickerState timeState) {
     final hourStr = timeState.selectedHour.toString().padLeft(2, '0');
     final minuteStr = timeState.selectedMinute.toString().padLeft(2, '0');
-    final periodColor = timeState.selectedPeriod == EthiopianTimePeriod.morning
-        ? _morningColor
-        : _eveningColor;
+    final periodColor = _getPeriodColor(timeState.selectedPeriod);
 
     return Column(
       key: const ValueKey('time-display'),
@@ -429,18 +429,33 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
   }
 
   String _getPeriodLabel(EthiopianTimePeriod period) {
-    if (widget.userLanguage == 'am') {
-      return period == EthiopianTimePeriod.morning
-          ? EthiopianTimePickerStrings.morning
-          : EthiopianTimePickerStrings.evening;
-    } else if (widget.userLanguage == 'ao') {
-      return period == EthiopianTimePeriod.morning
-          ? OromoDatePickerStrings.morning
-          : OromoDatePickerStrings.evening;
+    return EthiopianTime.getPeriodLabel(period, widget.userLanguage);
+  }
+
+  Color _getPeriodColor(EthiopianTimePeriod period) {
+    switch (period) {
+      case EthiopianTimePeriod.morning:
+        return _morningColor;
+      case EthiopianTimePeriod.afternoon:
+        return _afternoonColor;
+      case EthiopianTimePeriod.evening:
+        return _eveningColor;
+      case EthiopianTimePeriod.night:
+        return _nightColor;
     }
-    return period == EthiopianTimePeriod.morning
-        ? EnglishTimePickerStrings.morning
-        : EnglishTimePickerStrings.evening;
+  }
+
+  IconData _getPeriodIcon(EthiopianTimePeriod period) {
+    switch (period) {
+      case EthiopianTimePeriod.morning:
+        return Icons.wb_sunny_rounded;
+      case EthiopianTimePeriod.afternoon:
+        return Icons.wb_twilight_rounded;
+      case EthiopianTimePeriod.evening:
+        return Icons.nights_stay_rounded;
+      case EthiopianTimePeriod.night:
+        return Icons.bedtime_rounded;
+    }
   }
 
   String _getGregorianTimeLabel(TimePickerState timeState) {
@@ -729,6 +744,45 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
   }
 
   Widget _buildTimePicker(BuildContext context, TimePickerState timeState) {
+    // Determine valid hours based on period
+    // ጠዋት & ማታ: 12, 1, 2, 3, 4, 5
+    // ከሰአት & ሌሊት: 6, 7, 8, 9, 10, 11
+    final bool isFirstHalf =
+        timeState.selectedPeriod == EthiopianTimePeriod.morning ||
+        timeState.selectedPeriod == EthiopianTimePeriod.evening;
+    final List<int> validHours = isFirstHalf
+        ? [12, 1, 2, 3, 4, 5]
+        : [6, 7, 8, 9, 10, 11];
+
+    // Find current hour index in valid hours list
+    int currentHourIndex = validHours.indexOf(timeState.selectedHour);
+    if (currentHourIndex == -1) {
+      // If current hour is not valid for this period, default to first valid hour
+      currentHourIndex = 0;
+      // Update the hour in state
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          BlocProvider.of<TimePickerBloc>(context).add(
+            HourChanged(
+              hour: validHours[0],
+              currentMinute: timeState.selectedMinute,
+              currentPeriod: timeState.selectedPeriod,
+            ),
+          );
+        }
+      });
+    }
+
+    // Update controller position if needed
+    if (_hourController.hasClients &&
+        _hourController.selectedItem != currentHourIndex) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _hourController.hasClients) {
+          _hourController.jumpToItem(currentHourIndex);
+        }
+      });
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
       color: _surfaceColor,
@@ -747,13 +801,14 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
                 _buildTimeWheel(
                   context: context,
                   controller: _hourController,
-                  itemCount: 12,
-                  itemBuilder: (index) => '${index + 1}'.padLeft(2, '0'),
+                  itemCount: 6, // Only 6 valid hours per period
+                  itemBuilder: (index) =>
+                      '${validHours[index]}'.padLeft(2, '0'),
                   onChanged: (index) {
                     HapticFeedback.selectionClick();
                     BlocProvider.of<TimePickerBloc>(context).add(
                       HourChanged(
-                        hour: index + 1,
+                        hour: validHours[index],
                         currentMinute: timeState.selectedMinute,
                         currentPeriod: timeState.selectedPeriod,
                       ),
@@ -804,29 +859,63 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
   }
 
   Widget _buildPeriodSelector(BuildContext context, TimePickerState timeState) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    // 4 periods in a 2x2 grid
+    return Column(
       children: [
-        Expanded(
-          child: _buildPeriodButton(
-            context: context,
-            period: EthiopianTimePeriod.morning,
-            isSelected: timeState.selectedPeriod == EthiopianTimePeriod.morning,
-            color: _morningColor,
-            icon: Icons.wb_sunny_rounded,
-            timeState: timeState,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _buildPeriodButton(
+                context: context,
+                period: EthiopianTimePeriod.morning,
+                isSelected:
+                    timeState.selectedPeriod == EthiopianTimePeriod.morning,
+                color: _morningColor,
+                icon: Icons.wb_sunny_rounded,
+                timeState: timeState,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildPeriodButton(
+                context: context,
+                period: EthiopianTimePeriod.afternoon,
+                isSelected:
+                    timeState.selectedPeriod == EthiopianTimePeriod.afternoon,
+                color: _afternoonColor,
+                icon: Icons.wb_twilight_rounded,
+                timeState: timeState,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _buildPeriodButton(
-            context: context,
-            period: EthiopianTimePeriod.evening,
-            isSelected: timeState.selectedPeriod == EthiopianTimePeriod.evening,
-            color: _eveningColor,
-            icon: Icons.nightlight_round,
-            timeState: timeState,
-          ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _buildPeriodButton(
+                context: context,
+                period: EthiopianTimePeriod.evening,
+                isSelected:
+                    timeState.selectedPeriod == EthiopianTimePeriod.evening,
+                color: _eveningColor,
+                icon: Icons.nights_stay_rounded,
+                timeState: timeState,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: _buildPeriodButton(
+                context: context,
+                period: EthiopianTimePeriod.night,
+                isSelected:
+                    timeState.selectedPeriod == EthiopianTimePeriod.night,
+                color: _nightColor,
+                icon: Icons.bedtime_rounded,
+                timeState: timeState,
+              ),
+            ),
+          ],
         ),
       ],
     );
