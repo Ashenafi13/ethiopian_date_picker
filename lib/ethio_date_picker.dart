@@ -1,5 +1,3 @@
-library ethio_date_picker;
-
 export 'src/ethio_date_picker.dart';
 export 'src/ethio_datetime_picker.dart';
 export 'src/bloc/date_picker_bloc.dart';

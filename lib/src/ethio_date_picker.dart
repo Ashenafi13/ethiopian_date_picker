@@ -42,7 +42,7 @@ class EthiopianDatePicker extends StatefulWidget {
   });
 
   @override
-  _EthiopianDatePickerState createState() => _EthiopianDatePickerState();
+  State<EthiopianDatePicker> createState() => _EthiopianDatePickerState();
 }
 
 class _EthiopianDatePickerState extends State<EthiopianDatePicker>
