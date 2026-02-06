@@ -1,6 +1,6 @@
 name: ethio_date_picker
 description: "A custom Ethiopian Date Picker Flutter package with support for Amharic, Afaan Oromoo, and English."
-version: 1.0.1
+version: 1.1.0
 homepage: https://github.com/Ashenafi13/ethiopian_date_picker
 repository: https://github.com/Ashenafi13/ethiopian_date_picker
 

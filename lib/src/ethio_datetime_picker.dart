@@ -445,19 +445,6 @@ class _EthiopianDateTimePickerState extends State<EthiopianDateTimePicker>
     }
   }
 
-  IconData _getPeriodIcon(EthiopianTimePeriod period) {
-    switch (period) {
-      case EthiopianTimePeriod.morning:
-        return Icons.wb_sunny_rounded;
-      case EthiopianTimePeriod.afternoon:
-        return Icons.wb_twilight_rounded;
-      case EthiopianTimePeriod.evening:
-        return Icons.nights_stay_rounded;
-      case EthiopianTimePeriod.night:
-        return Icons.bedtime_rounded;
-    }
-  }
-
   String _getGregorianTimeLabel(TimePickerState timeState) {
     final ethiopianTime = EthiopianTime(
       hour: timeState.selectedHour,
