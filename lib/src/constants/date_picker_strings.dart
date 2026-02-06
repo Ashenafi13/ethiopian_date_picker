@@ -110,4 +110,29 @@ class OromoDatePickerStrings {
   static const String nov = 'Sadaasa';
   static const String dec = 'Muddee';
   static const String pag = 'Qaammee';
+
+  // Time picker strings
+  static const String morning = 'Ganama';
+  static const String evening = 'Galgala';
+  static const String hour = "Sa'aatii";
+  static const String minute = 'Daqiiqaa';
+  static const String selectTime = "Sa'aatii Filadhu";
+}
+
+/// Ethiopian time picker strings (Amharic)
+class EthiopianTimePickerStrings {
+  static const String morning = 'ጠዋት';
+  static const String evening = 'ማታ';
+  static const String hour = 'ሰዓት';
+  static const String minute = 'ደቂቃ';
+  static const String selectTime = 'ሰዓት ይምረጡ';
+}
+
+/// English time picker strings
+class EnglishTimePickerStrings {
+  static const String morning = 'Morning';
+  static const String evening = 'Evening';
+  static const String hour = 'Hour';
+  static const String minute = 'Minute';
+  static const String selectTime = 'Select Time';
 }
